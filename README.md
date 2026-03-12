@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="assets/header.png" alt="Prediction of Chest Disease from X-Ray Header" width="100%">
   
   <br>
   
