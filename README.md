@@ -13,11 +13,11 @@
 
 ## 📊 Özet (Overview)
 
-Bu proje, Makine Öğrenimi ve Evrişimli Sinir Ağları (CNN) kullanarak göğüs X-Ray görüntülerini analiz etmeyi ve hastalık tespiti (Özellikle Zatürre / Pneumonia) yapmayı amaçlamaktadır.
+Bu proje, Makine Öğrenimi ve Evrişimli Sinir Ağları (CNN) kullanarak göğüs X-Ray görüntülerini analiz etmeyi ve hastalıkların (Covid-19, Normal, Zatürre ve Verem/Tuberculosis) tespitini yapmayı amaçlamaktadır.
 
 ## 💾 Veri Seti (Dataset)
 
-This project uses the **Chest X-Ray Images (Pneumonia)** dataset. Due to GitHub's file size limits, the raw images are not included in this repository.
+This project uses the **Chest X-Ray (Pneumonia, Covid-19, Tuberculosis)** dataset. Due to GitHub's file size limits, the raw images are not included in this repository.
 
 To run the project, please follow these steps to obtain the dataset:
 
@@ -31,8 +31,8 @@ python download_data.py
 > *Not: Kaggle API'sini kullanabilmeniz için `kaggle.json` kimlik bilginizin sisteminizde (genellikle `~/.kaggle/kaggle.json`) yapılandırılmış olması gerekmektedir.*
 
 ### Seçenek 2: Manuel İndirme
-1. Veri setini şuradan indirin: [Kaggle - Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia)
-2. Zip'ten çıkardığınız `chest_xray` veya ana klasörün içindeki resimleri `data/NORMAL/` ve `data/PNEUMONIA/` klasörlerine yerleştirin. 
+1. Veri setini şuradan indirin: [Kaggle - Chest X-Ray (Pneumonia, Covid-19, Tuberculosis)](https://www.kaggle.com/datasets/jtiptj/chest-xray-pneumoniacovid19tuberculosis)
+2. İndirdiğiniz arşiv dosyasını `data/` klasörü altına çıkartıp resimleri `data/NORMAL/`, `data/PNEUMONIA/`, `data/COVID19/` ve `data/TUBERCULOSIS/` klasörlerine yerleştirin.
 
 ---
 
