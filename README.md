@@ -53,3 +53,22 @@ jupyter notebook "göğüs röntgeninden viral enfeksiyon tespiti.ipynb"
 ## 🧠 Model
 
 Projede `MobileNetV2` ve ek `Dense`, `Dropout`, ve `BatchNormalization` katmanları ile optimize edilmiş önceden eğitilmiş (Pre-Trained) Transfer Learning yaklaşımı kullanılmıştır.
+
+Veri, `stratify` ile **train / validation / test = 70 / 15 / 15** olarak bölünür. `EarlyStopping` ve `ModelCheckpoint` yalnızca validation setini izler; test seti yalnızca en sondaki `classification_report` ve confusion matrix için kullanılır (veri sızıntısını önlemek için).
+
+## 🔬 Algorithms from Scratch (NumPy)
+
+The `from_scratch/` package contains two classic image-processing algorithms written with **NumPy only** (no OpenCV/scikit-image calls inside the algorithms):
+
+| Module | What it does |
+|---|---|
+| `histogram_equalization.py` | Builds the histogram and CDF by hand and maps every gray level through the CDF to stretch contrast. |
+| `sobel.py` | Implements 2-D correlation with reflect-101 padding, the Sobel Gx/Gy kernels, gradient magnitude and direction. |
+
+Both are checked against OpenCV in `tests/`. Histogram equalization matches `cv2.equalizeHist` exactly, and Gx/Gy match `cv2.Sobel(ksize=3)`:
+
+```bash
+pip install numpy opencv-python matplotlib pytest
+pytest                                    # run the tests
+python -m from_scratch.demo data/PNEUMONIA/<image>.jpeg   # save a comparison figure to assets/
+```

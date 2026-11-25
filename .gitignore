@@ -2,4 +2,5 @@
 .codegpt
 data/
 Chest X_Ray Dataset/
-*.zip
+*.zip__pycache__/
+.pytest_cache/
