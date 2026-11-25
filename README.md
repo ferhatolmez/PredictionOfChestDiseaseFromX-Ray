@@ -65,6 +65,28 @@ jupyter notebook "göğüs röntgeninden viral enfeksiyon tespiti.ipynb"
 3. **Model:** MobileNetV2 pretrained on ImageNet + `GlobalAveragePooling2D` → `Dense(256)` → `Dropout(0.5)` → `Dense(4, softmax)`. A `Rescaling` layer maps inputs to [-1, 1], the range MobileNetV2 was trained on.
 4. **Training in two phases:** (1) frozen backbone, train only the head; (2) fine-tune the last 30 backbone layers with a 100× smaller learning rate. Light data augmentation (no horizontal flip, since chest anatomy is not left-right symmetric) and balanced class weights against class imbalance.
 
+## Results
+
+Test set: 1,071 images (15%), used only once, after training. Model selection used the validation set only.
+
+| Class | Precision | Recall | F1 | Images |
+|---|---|---|---|---|
+| COVID-19 | 0.93 | 0.93 | 0.93 | 86 |
+| Normal | 0.84 | 0.98 | 0.90 | 238 |
+| Pneumonia | 0.98 | 0.93 | 0.96 | 641 |
+| Tuberculosis | 1.00 | 0.92 | 0.96 | 106 |
+| **Accuracy** | | | **0.94** | 1,071 |
+| **Macro average** | 0.94 | 0.94 | **0.94** | |
+
+Effect of the changes in the last version (same split, same test set):
+
+| Version | Test accuracy | Macro F1 | Normal precision |
+|---|---|---|---|
+| Frozen backbone, no input rescaling, strong augmentation | 0.85 | 0.84 | 0.64 |
+| + rescaling to [-1, 1], lighter augmentation, fine-tuning | **0.94** | **0.94** | **0.84** |
+
+The weakest point is still **Normal precision (0.84)**: some sick X-rays are predicted as Normal, which is the costly kind of error in a medical setting. Validation loss was still going down in the last fine-tuning epoch, so longer fine-tuning may help further. Training ran on a CPU only (TensorFlow has no GPU support on native Windows).
+
 ## Algorithms from scratch (NumPy)
 
 | Module | What it does |
