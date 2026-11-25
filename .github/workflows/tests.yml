@@ -1,0 +1,32 @@
+# Runs the PEP 8 style check and the unit tests on both Linux and Windows.
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # only the lightweight packages the tests need (no TensorFlow)
+      - name: Install dependencies
+        run: pip install numpy opencv-python-headless matplotlib pytest ruff
+
+      - name: Style check (ruff, PEP 8)
+        run: |
+          ruff check .
+          ruff format --check from_scratch tests download_data.py
+
+      - name: Unit tests
+        run: pytest -v

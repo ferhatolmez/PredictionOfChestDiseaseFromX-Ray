@@ -21,9 +21,7 @@ as OpenCV, so Gx/Gy can be checked against ``cv2.Sobel`` (see tests/).
 
 import numpy as np
 
-SOBEL_X = np.array([[-1, 0, 1],
-                    [-2, 0, 2],
-                    [-1, 0, 1]], dtype=np.float64)
+SOBEL_X = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float64)
 SOBEL_Y = SOBEL_X.T.copy()
 
 
@@ -48,7 +46,7 @@ def correlate2d(image: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     for i in range(kh):
         for j in range(kw):
             if kernel[i, j] != 0:
-                out += kernel[i, j] * padded[i:i + h, j:j + w]
+                out += kernel[i, j] * padded[i : i + h, j : j + w]
     return out
 
 
@@ -68,6 +66,9 @@ def sobel_edges(image: np.ndarray, normalize: bool = True):
     direction = np.arctan2(gy, gx)
     if normalize:
         peak = magnitude.max()
-        magnitude = (magnitude / peak * 255).astype(np.uint8) if peak > 0 \
+        magnitude = (
+            (magnitude / peak * 255).astype(np.uint8)
+            if peak > 0
             else np.zeros_like(magnitude, dtype=np.uint8)
+        )
     return magnitude, direction

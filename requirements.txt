@@ -1,0 +1,25 @@
+# Tested with Python 3.12 on Windows 11 (and the from-scratch tests on Ubuntu via CI).
+# Install:  pip install -r requirements.txt
+
+# deep learning model (notebook)
+tensorflow==2.21.0
+keras==3.15.1
+
+# data & image processing
+numpy==2.5.5
+opencv-python==5.1.0.95
+scikit-learn==1.9.1
+pandas==3.1.1
+
+# plotting
+matplotlib==3.11.2
+seaborn==0.13.2
+
+# running the notebook
+jupyter
+nbconvert==7.17.2
+ipykernel==7.4.0
+
+# development: tests and PEP 8 style checks
+pytest==9.2.0
+ruff==0.17.6

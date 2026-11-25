@@ -1,76 +1,89 @@
-<div align="center">
-  
-  <br>
-  
-  # Prediction of Chest Disease from X-Ray
-  
-  <p>
-    <b>Deep Learning dayalı Görüntü Sınıflandırma ile Göğüs Röntgeninden Viral Enfeksiyon (Zatürre / Pneumonia) Tespiti.</b>
-  </p>
-</div>
+# Prediction of Chest Disease from X-Ray
 
----
+[![tests](https://github.com/ferhatolmez/PredictionOfChestDiseaseFromX-Ray/actions/workflows/tests.yml/badge.svg)](https://github.com/ferhatolmez/PredictionOfChestDiseaseFromX-Ray/actions/workflows/tests.yml)
 
-## 📊 Özet (Overview)
+Classification of chest X-rays into **COVID-19, Normal, Pneumonia and Tuberculosis** with a pretrained CNN (MobileNetV2, transfer learning), plus two classic image-processing algorithms implemented **from scratch in NumPy**.
 
-Bu proje, Makine Öğrenimi ve Evrişimli Sinir Ağları (CNN) kullanarak göğüs X-Ray görüntülerini analiz etmeyi ve hastalıkların (Covid-19, Normal, Zatürre ve Verem/Tuberculosis) tespitini yapmayı amaçlamaktadır.
+## Project structure
 
-## 💾 Veri Seti (Dataset)
-
-This project uses the **Chest X-Ray (Pneumonia, Covid-19, Tuberculosis)** dataset. Due to GitHub's file size limits, the raw images are not included in this repository.
-
-To run the project, please follow these steps to obtain the dataset:
-
-### Seçenek 1: Otomatik İndirme (Önerilen)
-Repo içerisinde bulunan `download_data.py` betiğini çalıştırarak veri setini Kaggle üzerinden otomatik indirebilir ve klasör yapısını (train, val, test yerine düz bir yapıya) notebook'un beklediği formata getirebilirsiniz.
-
-```bash
-pip install kaggle
-python download_data.py
 ```
-> *Not: Kaggle API'sini kullanabilmeniz için `kaggle.json` kimlik bilginizin sisteminizde (genellikle `~/.kaggle/kaggle.json`) yapılandırılmış olması gerekmektedir.*
+├── göğüs röntgeninden viral enfeksiyon tespiti.ipynb   # main notebook: data → preprocessing → model → evaluation
+├── download_data.py          # downloads the Kaggle dataset and flattens it into data/<CLASS>/
+├── from_scratch/             # NumPy-only algorithms
+│   ├── histogram_equalization.py
+│   ├── sobel.py
+│   └── demo.py               # saves a comparison figure
+├── tests/                    # pytest unit tests (checked against OpenCV)
+├── docs/math_in_this_project.md   # the mathematics used in the code
+├── requirements.txt / environment.yml
+└── .github/workflows/tests.yml    # style check + tests on Linux and Windows
+```
 
-### Seçenek 2: Manuel İndirme
-1. Veri setini şuradan indirin: [Kaggle - Chest X-Ray (Pneumonia, Covid-19, Tuberculosis)](https://www.kaggle.com/datasets/jtiptj/chest-xray-pneumoniacovid19tuberculosis)
-2. İndirdiğiniz arşiv dosyasını `data/` klasörü altına çıkartıp resimleri `data/NORMAL/`, `data/PNEUMONIA/`, `data/COVID19/` ve `data/TUBERCULOSIS/` klasörlerine yerleştirin.
-
----
-
-## 🚀 Kurulum & Çalıştırma (Getting Started)
-
-Projeyi bilgisayarınıza klonlayın ve gerekli bağımlılıkları indirin:
+## Getting started
 
 ```bash
 git clone https://github.com/ferhatolmez/PredictionOfChestDiseaseFromX-Ray.git
 cd PredictionOfChestDiseaseFromX-Ray
 ```
 
-Veri setini indirdikten sonra Jupyter Notebook üzerinden projeyi çalıştırabilirsiniz:
+Create an environment with **either** Anaconda **or** pip:
+
+```bash
+# Anaconda / Miniconda
+conda env create -f environment.yml
+conda activate chest-xray
+
+# or: venv + pip
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## Dataset
+
+[Chest X-Ray (Pneumonia, Covid-19, Tuberculosis)](https://www.kaggle.com/datasets/jtiptj/chest-xray-pneumoniacovid19tuberculosis) — 7,135 images in 4 classes. The images are not stored in this repository.
+
+**Automatic download** (needs a Kaggle API token in `~/.kaggle/kaggle.json`):
+
+```bash
+pip install kaggle
+python download_data.py
+```
+
+**Manual download:** download the archive from Kaggle and put the images into `data/COVID19/`, `data/NORMAL/`, `data/PNEUMONIA/` and `data/TUBERCULOSIS/`.
+
+Then run the notebook:
+
 ```bash
 jupyter notebook "göğüs röntgeninden viral enfeksiyon tespiti.ipynb"
 ```
 
-## 🧠 Model
+## Method
 
-Projede `MobileNetV2` ve ek `Dense`, `Dropout`, ve `BatchNormalization` katmanları ile optimize edilmiş önceden eğitilmiş (Pre-Trained) Transfer Learning yaklaşımı kullanılmıştır.
+1. **Preprocessing:** resize to 224×224, white balance per channel, normalisation to [0, 1].
+2. **Split:** stratified **train / validation / test = 70 / 15 / 15** (`train_test_split` applied twice). The validation set is used for `EarlyStopping`, `ReduceLROnPlateau` and `ModelCheckpoint`; the test set is used **only once**, for the final report — this avoids data leakage.
+3. **Model:** MobileNetV2 pretrained on ImageNet + `GlobalAveragePooling2D` → `Dense(256)` → `Dropout(0.5)` → `Dense(4, softmax)`. A `Rescaling` layer maps inputs to [-1, 1], the range MobileNetV2 was trained on.
+4. **Training in two phases:** (1) frozen backbone, train only the head; (2) fine-tune the last 30 backbone layers with a 100× smaller learning rate. Light data augmentation (no horizontal flip, since chest anatomy is not left-right symmetric) and balanced class weights against class imbalance.
 
-Veri, `stratify` ile **train / validation / test = 70 / 15 / 15** olarak bölünür. `EarlyStopping` ve `ModelCheckpoint` yalnızca validation setini izler; test seti yalnızca en sondaki `classification_report` ve confusion matrix için kullanılır (veri sızıntısını önlemek için).
-
-## 🔬 Algorithms from Scratch (NumPy)
-
-The `from_scratch/` package contains two classic image-processing algorithms written with **NumPy only** (no OpenCV/scikit-image calls inside the algorithms):
+## Algorithms from scratch (NumPy)
 
 | Module | What it does |
 |---|---|
 | `histogram_equalization.py` | Builds the histogram and CDF by hand and maps every gray level through the CDF to stretch contrast. |
-| `sobel.py` | Implements 2-D correlation with reflect-101 padding, the Sobel Gx/Gy kernels, gradient magnitude and direction. |
+| `sobel.py` | 2-D correlation with reflect-101 padding, Sobel Gx/Gy kernels, gradient magnitude and direction. |
 
 ![From-scratch demo: original, histogram equalized, Sobel edges](assets/from_scratch_demo.png)
 
-Both are checked against OpenCV in `tests/`. Histogram equalization matches `cv2.equalizeHist` exactly, and Gx/Gy match `cv2.Sobel(ksize=3)`:
+Both are verified against OpenCV: histogram equalization matches `cv2.equalizeHist` exactly, and Gx/Gy match `cv2.Sobel(ksize=3)`.
 
 ```bash
-pip install numpy opencv-python matplotlib pytest
-pytest                                    # run the tests
-python -m from_scratch.demo data/PNEUMONIA/<image>.jpeg   # save a comparison figure to assets/
+pytest                                                   # run all unit tests
+ruff check . && ruff format --check from_scratch tests   # PEP 8 style check
+python -m from_scratch.demo data/PNEUMONIA/<image>.jpeg  # save the comparison figure
 ```
+
+The style check and tests run automatically on **Ubuntu and Windows** with GitHub Actions on every push.
+
+## Mathematics
+
+[`docs/math_in_this_project.md`](docs/math_in_this_project.md) explains the linear algebra, probability, statistics and calculus behind the code (convolution as an inner product, gradient norm, CDF, softmax, chain rule / backpropagation) and links every concept to where it is used.

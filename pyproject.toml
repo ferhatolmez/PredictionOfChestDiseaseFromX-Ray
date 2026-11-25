@@ -1,0 +1,23 @@
+[project]
+name = "chest-xray-classification"
+version = "0.1.0"
+description = "Chest X-ray disease classification (COVID-19, Normal, Pneumonia, Tuberculosis) with transfer learning, plus classic image-processing algorithms written from scratch in NumPy."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle (PEP 8), F: pyflakes, I: import order, N: PEP 8 naming,
+# UP: modern Python syntax, B: common bugs, D: PEP 257 docstrings
+select = ["E", "W", "F", "I", "N", "UP", "B", "D"]
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D103"]

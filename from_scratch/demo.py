@@ -14,10 +14,11 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from from_scratch import equalize_histogram, sobel_edges, compute_histogram
+from from_scratch import compute_histogram, equalize_histogram, sobel_edges
 
 
 def main():
+    """Parse arguments, run both algorithms and save the figure."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("image", help="path to a chest X-ray image")
     parser.add_argument("--out", default="assets/from_scratch_demo.png")
@@ -36,9 +37,13 @@ def main():
     print(f"max |ours - cv2.equalizeHist| = {diff}")
 
     fig, ax = plt.subplots(2, 3, figsize=(14, 8), gridspec_kw={"height_ratios": [3, 1]})
-    for col, (img, title) in enumerate([(gray, "Original"),
-                                        (eq, "Histogram equalized (NumPy)"),
-                                        (edges, "Sobel edges (NumPy)")]):
+    for col, (img, title) in enumerate(
+        [
+            (gray, "Original"),
+            (eq, "Histogram equalized (NumPy)"),
+            (edges, "Sobel edges (NumPy)"),
+        ]
+    ):
         ax[0, col].imshow(img, cmap="gray")
         ax[0, col].set_title(title)
         ax[0, col].axis("off")

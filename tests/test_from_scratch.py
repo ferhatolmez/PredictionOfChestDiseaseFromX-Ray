@@ -7,7 +7,12 @@ import cv2
 import numpy as np
 import pytest
 
-from from_scratch import compute_histogram, equalize_histogram, sobel_gradients, sobel_edges
+from from_scratch import (
+    compute_histogram,
+    equalize_histogram,
+    sobel_edges,
+    sobel_gradients,
+)
 
 RNG = np.random.default_rng(0)
 
@@ -19,9 +24,11 @@ def low_contrast_image(h=128, w=96):
 
 # ---------- histogram equalization ----------
 
+
 def test_histogram_matches_numpy_bincount():
     img = low_contrast_image()
-    assert np.array_equal(compute_histogram(img), np.bincount(img.ravel(), minlength=256))
+    expected = np.bincount(img.ravel(), minlength=256)
+    assert np.array_equal(compute_histogram(img), expected)
 
 
 @pytest.mark.parametrize("seed", range(5))
@@ -49,6 +56,7 @@ def test_equalize_rejects_color_image():
 
 
 # ---------- Sobel ----------
+
 
 def test_sobel_matches_opencv():
     img = RNG.integers(0, 256, size=(64, 80), dtype=np.uint8)
