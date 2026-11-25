@@ -41,7 +41,7 @@ python download_data.py
 Projeyi bilgisayarınıza klonlayın ve gerekli bağımlılıkları indirin:
 
 ```bash
-git clone https://github.com/KULLANICI_ADINIZ/PredictionOfChestDiseaseFromX-Ray.git
+git clone https://github.com/ferhatolmez/PredictionOfChestDiseaseFromX-Ray.git
 cd PredictionOfChestDiseaseFromX-Ray
 ```
 
