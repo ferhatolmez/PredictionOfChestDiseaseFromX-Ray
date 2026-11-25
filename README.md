@@ -65,6 +65,8 @@ The `from_scratch/` package contains two classic image-processing algorithms wri
 | `histogram_equalization.py` | Builds the histogram and CDF by hand and maps every gray level through the CDF to stretch contrast. |
 | `sobel.py` | Implements 2-D correlation with reflect-101 padding, the Sobel Gx/Gy kernels, gradient magnitude and direction. |
 
+![From-scratch demo: original, histogram equalized, Sobel edges](assets/from_scratch_demo.png)
+
 Both are checked against OpenCV in `tests/`. Histogram equalization matches `cv2.equalizeHist` exactly, and Gx/Gy match `cv2.Sobel(ksize=3)`:
 
 ```bash
