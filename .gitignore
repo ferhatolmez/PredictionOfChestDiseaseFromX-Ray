@@ -4,3 +4,5 @@ Chest X_Ray Dataset/
 *.zip
 __pycache__/
 .pytest_cache/
+.venv/
+*_log.txt
