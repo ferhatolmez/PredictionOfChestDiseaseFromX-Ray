@@ -10,6 +10,7 @@ was trained on one public dataset whose classes come from different sources
 """
 
 import argparse
+import json
 from pathlib import Path
 
 import gradio as gr
@@ -34,7 +35,22 @@ driven by the lungs, not by text markers or the image border.
 """
 
 
-def build_app(predictor: Predictor) -> gr.Blocks:
+EXAMPLES_FILE = Path("results/demo_examples.json")
+
+
+def load_examples(path: Path = EXAMPLES_FILE) -> list[str]:
+    """Return example images from the test set that exist on this computer.
+
+    The images are not in the repository (only the list is), so without the
+    dataset the app simply shows no examples.
+    """
+    if not path.exists():
+        return []
+    entries = json.loads(path.read_text())
+    return [e["path"] for e in entries if Path(e["path"]).exists()]
+
+
+def build_app(predictor: Predictor, examples: list[str] | None = None) -> gr.Blocks:
     """Create the two-tab interface around a loaded predictor."""
 
     def classify(image):
@@ -77,6 +93,13 @@ def build_app(predictor: Predictor) -> gr.Blocks:
                 num_top_classes=len(predictor.classes), label="Prediction"
             )
             image_in.change(classify, inputs=image_in, outputs=[label_out, heatmap_out])
+            if examples:
+                gr.Examples(
+                    examples=examples,
+                    inputs=image_in,
+                    label="Test-set examples (never seen in training): click one",
+                    examples_per_page=len(examples),
+                )
         with gr.Tab("Several images"):
             files_in = gr.File(
                 file_count="multiple", file_types=["image"], label="X-ray files"
@@ -92,7 +115,7 @@ def main() -> None:
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL)
     parser.add_argument("--port", type=int, default=7860)
     args = parser.parse_args()
-    build_app(Predictor(args.model)).launch(server_port=args.port)
+    build_app(Predictor(args.model), load_examples()).launch(server_port=args.port)
 
 
 if __name__ == "__main__":
