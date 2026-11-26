@@ -20,6 +20,9 @@ jupyter
 nbconvert==7.17.2
 ipykernel==7.4.0
 
+# demo app (app.py)
+gradio==6.32.0
+
 # development: tests and PEP 8 style checks
 pytest==9.2.0
 ruff==0.17.6

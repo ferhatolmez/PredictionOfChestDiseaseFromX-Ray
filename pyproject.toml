@@ -17,7 +17,9 @@ extend-exclude = ["*.ipynb"]
 # E/W: pycodestyle (PEP 8), F: pyflakes, I: import order, N: PEP 8 naming,
 # UP: modern Python syntax, B: common bugs, D: PEP 257 docstrings
 select = ["E", "W", "F", "I", "N", "UP", "B", "D"]
-ignore = ["D203", "D213"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D103"]

@@ -19,14 +19,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      # only the lightweight packages the tests need (no TensorFlow)
+      # lightweight packages only; the TensorFlow tests are skipped here
+      # (tests/test_model.py) and run locally
       - name: Install dependencies
-        run: pip install numpy opencv-python-headless matplotlib pytest ruff
+        run: pip install numpy opencv-python-headless scikit-learn matplotlib pytest ruff
 
       - name: Style check (ruff, PEP 8)
         run: |
           ruff check .
-          ruff format --check from_scratch tests download_data.py
+          ruff format --check chestxray from_scratch tests download_data.py
 
       - name: Unit tests
         run: pytest -v

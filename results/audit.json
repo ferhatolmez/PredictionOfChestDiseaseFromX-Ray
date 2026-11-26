@@ -1,0 +1,58 @@
+{
+  "per_class": {
+    "COVID19": {
+      "images": 576,
+      "patients": 576,
+      "max_images_per_patient": 1,
+      "file_types": {
+        ".jpg": 576
+      },
+      "median_height": 1028,
+      "median_width": 1165
+    },
+    "NORMAL": {
+      "images": 1583,
+      "patients": 1444,
+      "max_images_per_patient": 4,
+      "file_types": {
+        ".jpeg": 1583
+      },
+      "median_height": 1323,
+      "median_width": 1654
+    },
+    "PNEUMONIA": {
+      "images": 4273,
+      "patients": 1674,
+      "max_images_per_patient": 31,
+      "file_types": {
+        ".jpeg": 4273
+      },
+      "median_height": 776,
+      "median_width": 1160
+    },
+    "TUBERCULOSIS": {
+      "images": 703,
+      "patients": 703,
+      "max_images_per_patient": 1,
+      "file_types": {
+        ".png": 703
+      },
+      "median_height": 512,
+      "median_width": 512
+    }
+  },
+  "duplicate_sets": 52,
+  "images_in_duplicate_sets": 109,
+  "duplicate_sets_across_patients": 23,
+  "duplicate_sets_across_classes": 1,
+  "duplicate_examples_across_classes": [
+    [
+      "data\\COVID19\\COVID19(277).jpg",
+      "data\\PNEUMONIA\\person1004_virus_1686.jpeg"
+    ]
+  ],
+  "majority_class_accuracy": 0.5988787666433076,
+  "probe_accuracy_size_only": 0.8350385423966363,
+  "probe_accuracy_brightness_only": 0.687175893482831,
+  "probe_accuracy_size_and_brightness": 0.8995094604064471
+}

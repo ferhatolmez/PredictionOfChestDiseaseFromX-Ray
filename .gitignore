@@ -6,3 +6,10 @@ __pycache__/
 .pytest_cache/
 .venv/
 *_log.txt
+
+# training outputs: keep metrics, history and split; only seed 0's model (Git LFS)
+results/*.png
+results/seed_*/best_model.keras
+!results/seed_0/best_model.keras
+.ipynb_checkpoints/
+results/masking_*/best_model.keras
